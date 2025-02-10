@@ -1,1 +1,98 @@
 Coloque aqui todas as respostas das práticas indicadas no README.md
+
+Questão 1
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         172.18.0.1      0.0.0.0         UG    0      0        0 eth0
+172.18.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eth0
+
+Questão 2
+172.18.0.2
+inet 172.18.0.2/16 brd 172.18.255.255 scope global
+eth0
+
+Questão 3 
+172.217.30.68 *nslookup www.google.com*
+192.0.66.51 *nslookup www.whitehouse.gov*
+104.18.26.22 *nslookup www.rnp.br*
+150.165.254.52 *nslookup www.ufpb.br*
+
+Questão 4
+64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.039 ms ki
+64 bytes from 10.100.9.70: icmp_seq=1 ttl=63 time=1.262 ms *proprio ip*
+
+*ping UFPB* 64 bytes from 150.165.254.52: icmp_seq=8 ttl=63 time=48.503 ms
+*ping yahoo* 64 bytes from 69.147.82.60: icmp_seq=1 ttl=63 time=147.987 ms
+*ping gov* 64 bytes from 170.246.255.242: icmp_seq=1 ttl=63 time=80.856 ms
+*ping dce.ufpb* ping: unknown host
+
+O que pode influenciar as diferenças nos tempos?
+UFPB apresentou a menor latência (48.5 ms), pois provavelmente está mais próximo do seu acesso.
+Yahoo apresentou a maior latência (147.9 ms), indicando que está mais distante ou que a infraestrutura de rede até ele é menos eficiente.
+O gov teve um tempo intermediário (80.8 ms), indicando que está no Brasil, mas precisou dar mais saltos para chegar ao acesso
+
+Questão 5
+traceroute to www.google.com (172.217.30.68), 30 hops max, 60 byte packets
+172.18.0.1 (172.18.0.1)  0.821 ms  0.642 ms  0.599 ms
+
+ traceroute to www.rnp.br (104.18.27.22), 30 hops max, 60 byte packets
+172.18.0.1 (172.18.0.1)  0.751 ms  0.610 ms  0.580 ms
+
+traceroute to www.whitehouse.gov (192.0.66.51), 30 hops max, 60 byte packets
+172.18.0.1 (172.18.0.1)  1.117 ms  0.947 ms  0.898 ms
+
+Questão 6
+
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+default         172.18.0.1      0.0.0.0         UG        0 0          0 eth0
+172.18.0.0      0.0.0.0         255.255.0.0     U         0 0          0 eth0
+
+Os resultados são os mesmos do comando route?
+Há informações adicionais?
+Não, a tabela apresenta informações diferentes como: MSS, Window e irtt
+
+Questão 7
+HTTP/1.1 400 Bad Request
+Server: nginx
+Date: Mon, 10 Feb 2025 14:10:01 GMT
+Content-Type: text/html
+Content-Length: 166
+Connection: close
+
+<html>
+<head><title>400 Bad Request</title></head>
+<body bgcolor="white">
+<center><h1>400 Bad Request</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+Connection closed by foreign host.
+O servidor respondeu? O serviço está ativo?
+A resposta HTTP/1.1 400 Bad Request indica que o servidor respondeu, mas rejeitou a requisição porque ela foi malformada ou não compreendida pelo servidor.
+
+Server lookup failure:  www.dce.ufpb.br:21, Name or service not known
+O servidor respondeu? O serviço está ativo?
+Não, o nome do servidor não pôde ser encontrado. Isso significa que a requisição nem chegou ao servidor, pois o sistema não conseguiu encontrar o endereço IP correspondente.
+
+Questão 8
+Diagnóstico de Problemas de Conectividade: Identifica onde ocorrem falhas ou degradações na rota até um destino específico, permitindo localizar pontos de perda de pacotes ou alta latência.
+Monitoramento de Desempenho de Rede: Fornece uma visão contínua do desempenho da rede, útil para detectar problemas intermitentes ou avaliar a estabilidade da conexão ao longo do tempo.
+Análise de Roteamento: Revela o caminho que os pacotes percorrem até o destino, ajudando a identificar rotas subótimas ou mudanças inesperadas no roteamento.
+
+Interpretação dos dados:
+
+Perda de Pacotes (Loss%): Perdas significativas em um salto específico podem indicar problemas nesse ponto da rede.
+Latência (Last, Avg, Best, Wrst): Valores de latência elevados ou variáveis podem sugerir congestionamento ou problemas de desempenho.
+Desvio Padrão (StDev): Um desvio padrão alto indica flutuações na latência, o que pode afetar a qualidade da conexão.
+É importante notar que perdas de pacotes em saltos intermediários nem sempre indicam um problema, especialmente se o destino final não apresentar perdas. Alguns roteadores podem priorizar o encaminhamento de pacotes em detrimento de responder a solicitações ICMP, o que pode resultar em aparentes perdas de pacotes nesses pontos. 
+                                                                                   Packets               Pings
+ Host                                                                            Loss%   Snt   Last   Avg  Best  Wrst StDev 
+ 1. 172.18.0.1                                                                    0.0%   295    0.1   0.1   0.1   1.1   0.1
+ 2. 172.217.30.68                                                                 3.7%   295   59.4  67.4  57.4 256.4  24.4
+ Primeiro Salto (172.18.0.1)
+
+                                                                                   Packets               Pings
+ Host                                                                            Loss%   Snt   Last   Avg  Best  Wrst StDev 
+ 1. 172.18.0.1                                                                    0.0%     9    0.1   0.1   0.1   0.2   0.0
+ 2. 150.165.254.52                                                                6.0%     8   50.3  72.4  24.9 344.7 110.3
